@@ -6,7 +6,7 @@ export default function Home() {
       <main className="flex justify-center flex-1">
         <h1 className="text-6xl font-bold">Hello World👋</h1>
       </main>
-      <footer>
+      <footer className="footer pb-9 px-6 relative mb-0">
         <Button>Start</Button>
       </footer>
     </div>
