@@ -19,36 +19,33 @@ type Props = {
 }
 
 export default function QuizzQuestions( props : Props) {
-    const { questions } = props.quizz;
-    const [started, setStarted] = useState<boolean>(false);
-    const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-    const [score, setScore] = useState<number>(0);
-    const [userAnswer, setUserAnswer] = useState<{ questionId: number; answerId: number }[]>([]);
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [submitted, setSubmitted] = useState<boolean>(false);
-    const router = useRouter();
+  const { questions } = props.quizz;
+  const [started, setStarted] = useState<boolean>(false);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+  const [userAnswer, setUserAnswer] = useState<{ questionId: number; answerId: number }[]>([]);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const router = useRouter();
   
-    const handleNext = () => {
-      if(!started) {
-          setStarted(true);
-          return;
+  const handleNext = () => {
+      if (!started) {
+        setStarted(true);
+        return;
       }
-  
-      if(currentQuestion < questions.length - 1) {
-          setCurrentQuestion(currentQuestion + 1);
+    
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
       } else {
-          setSubmitted(true);
-          return
+        setSubmitted(true);
+        return;
       }
-  
-      setIsCorrect(null);
-    }
+  }
 
-    const handlePrevious = () => {
+  const handlePrevious = () => {
         if(currentQuestion !== 0) {
             setCurrentQuestion(previousCurrentQuestion => previousCurrentQuestion - 1);
         }
-    }
+  }
   
     const handleAnswer = (answer: Answer, questionId: number) => {
       const newUserAnswer = [
@@ -66,31 +63,33 @@ export default function QuizzQuestions( props : Props) {
       if(isCurrentCorrect) {
           setScore(score + 1);
       }
-      
-      setIsCorrect(isCurrentCorrect);
+
     }
 
-    const handleSubmit = async () => {}
+  const handleSubmit = async () => {}
     
-    const handleExit = () => {
-        router.push("/");
-    }
+  const handleExit = () => {
+        router.push("/dashboard");
+  }
 
   
-    const scorePercentage = Math.round((score / questions.length) * 100);
-    const selectedAnswer: number | null | undefined = userAnswer.find(answer => answer.questionId === currentQuestion)?.answerId;
+  const scorePercentage = Math.round((score / questions.length) * 100);
+  const selectedAnswer: number | null | undefined = userAnswer.find(answer => answer.questionId === questions[currentQuestion].id)?.answerId;
+  const isCorrect: boolean | null | undefined = questions[currentQuestion].answers.findIndex((answer) => answer.id === selectedAnswer) !== -1 
+                                                ? questions[currentQuestion].answers.find((answer) => answer.id === selectedAnswer)?.isCorrect 
+                                                : null;
   
-    if(submitted) {
-      return (
-          <QuizzSubmission
-              score={score}
-              scorePercentage={scorePercentage}
-              totalQuestions={questions.length}
-          />
-      )
-    }
-  
+  if(submitted) {
     return (
+        <QuizzSubmission
+            score={score}
+            scorePercentage={scorePercentage}
+            totalQuestions={questions.length}
+        />
+    )
+  }
+  
+  return (
       <div className="flex flex-col flex-1">
           <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
              <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
@@ -116,7 +115,9 @@ export default function QuizzQuestions( props : Props) {
                           <Button 
                               key={answer.id} 
                               variant={variant} 
+                              disabled={!!selectedAnswer}
                               size="xl" 
+                              className="disabled:opacity-100"
                               onClick={() => handleAnswer(answer, questions[currentQuestion].id)}
                           >
                               <p className="whitespace-normal">
@@ -144,5 +145,5 @@ export default function QuizzQuestions( props : Props) {
         </footer>
       </div>
     )
-  }
+}
   
