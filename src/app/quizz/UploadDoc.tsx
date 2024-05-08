@@ -2,47 +2,44 @@
 
 import { Button } from "@/components/ui/button"
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const UploadDoc = () => {
-    const [document, setDocument] = useState<File | null | undefined>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string>("")
-    
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-       
-        if(!document) {
-            setError("Please select a document")
-            return
-        }
+  const [document, setDocument] = useState<File | null | undefined>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const router = useRouter();
 
-        setIsLoading(true)
-
-        const formData = new FormData()
-
-        formData.append("pdf", document as Blob)
-
-        try {
-            
-            const res = await fetch("/api/quizz/generate", {
-                method: "POST",
-                body: formData,
-            })
-
-            if(res.status === 200) {
-                console.log("quizz generated successfully")
-            }
-
-        } catch (error) {
-            console.log("error generating quizz", error)
-        }
-
-        setIsLoading(false)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!document) {
+      setError("Please upload the document first");
+      return;
     }
 
-    return (
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("pdf", document as Blob);
+    try {
+      const res = await fetch("/api/quizz/generate", {
+        method: "POST",
+        body: formData
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        const quizzId = data.quizzId;
+
+        router.push(`/quizz/${quizzId}`);
+      }
+    } catch (e) {
+      console.log("error while generating", e);
+    }
+    setIsLoading(false);
+  }
+
+  return (
         <div className="w-full">
-            <form className="w-full" onSubmit={handleSubmit}>
+            {isLoading ? ( <p>Loading...</p> ) : (<form className="w-full" onSubmit={handleSubmit}>
               <label 
                 htmlFor="document" 
                 className="bg-secondary w-full flex h-20 rounded-md border-4 border-dashed border-blue-900 relative"
@@ -65,7 +62,7 @@ const UploadDoc = () => {
                 >
                     Quizzを作成する🪄
                 </Button>
-            </form>
+            </form>)}
         </div>
     )
 }
