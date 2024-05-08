@@ -58,11 +58,15 @@ export default function Home() {
   }
 
   const handleAnswer = (answer: any) => {
+   
     setSelectedAnswer(answer.id);
+   
     const isCurrentCorrect = answer.isCorrect;
+    
     if(isCurrentCorrect) {
         setScore(score + 1);
     }
+    
     setIsCorrect(isCurrentCorrect);
   }
 
@@ -89,8 +93,9 @@ export default function Home() {
                     {questions[currentQuestion].answers.map((answer) => (
                         <Button 
                             key={answer.id}
-                            variant={"secondary"} 
+                            variant={"neoOutline"} 
                             onClick={() => handleAnswer(answer)}
+                            size={"xl"}
                         >
                             {answer.answerText}
                         </Button>
@@ -104,7 +109,13 @@ export default function Home() {
             isCorrect={isCorrect} 
             correctAnswer={questions[currentQuestion].answers.find(answer => answer.isCorrect === true)?.answerText || ""}  
         />
-        <Button onClick={handleNext}>Start</Button>
+        <Button 
+            variant={"neo"} 
+            size={"lg"} 
+            onClick={handleNext}
+        >
+            Start
+        </Button>
       </footer>
     </div>
   )
