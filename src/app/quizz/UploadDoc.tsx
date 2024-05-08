@@ -5,13 +5,39 @@ import React, { useState } from "react"
 
 const UploadDoc = () => {
     const [document, setDocument] = useState<File | null | undefined>(null)
-
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string>("")
     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+       
+        if(!document) {
+            setError("Please select a document")
+            return
+        }
+
         setIsLoading(true)
-        console.log(document)
+
+        const formData = new FormData()
+
+        formData.append("pdf", document as Blob)
+
+        try {
+            
+            const res = await fetch("/api/quizz/generate", {
+                method: "POST",
+                body: formData,
+            })
+
+            if(res.status === 200) {
+                console.log("quizz generated successfully")
+            }
+
+        } catch (error) {
+            console.log("error generating quizz", error)
+        }
+
+        setIsLoading(false)
     }
 
     return (
@@ -31,6 +57,7 @@ const UploadDoc = () => {
                     onChange={(e) => setDocument(e?.target?.files?.[0])}
                 />
                 </label>
+                {error ? <p className="text-red-600">{error}</p> : null}
                 <Button
                     type="submit"
                     size="lg"
