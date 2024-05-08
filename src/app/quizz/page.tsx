@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
 import ResultCard from "./ResultCard";
+import QuizzSubmission from "./QuizzSubmission";
 
 const questions = [
     {
@@ -41,6 +42,7 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handleNext = () => {
     if(!started) {
@@ -50,7 +52,9 @@ export default function Home() {
 
     if(currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
-        return;
+    } else {
+        setSubmitted(true);
+        return
     }
 
     setSelectedAnswer(null);
@@ -70,6 +74,18 @@ export default function Home() {
     setIsCorrect(isCurrentCorrect);
   }
 
+  const scorePercentage = Math.round((score / questions.length) * 100);
+
+  if(submitted) {
+    return (
+        <QuizzSubmission
+            score={score}
+            scorePercentage={scorePercentage}
+            totalQuestions={questions.length}
+        />
+    )
+  }
+
   return (
     <div className="flex flex-col flex-1">
         <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
@@ -82,7 +98,7 @@ export default function Home() {
       <main className="flex justify-center flex-1">
         {!started ? (
             <h1 className="text-3xl font-bold">
-                Welcome to the quizz page!
+                Welcome to the quizz page👋
             </h1>
         ) : (
            <div >
@@ -90,16 +106,21 @@ export default function Home() {
                     {questions[currentQuestion].questionText}
                 </h2>
                 <div className="grid grid-cols-1 gap-6 mt-6">
-                    {questions[currentQuestion].answers.map((answer) => (
+                {questions[currentQuestion].answers.map(answer => {
+                    const variant = selectedAnswer === answer.id ? (answer.isCorrect ? "neoSuccess" : "neoDanger") : "neoOutline";
+                    return (
                         <Button 
-                            key={answer.id}
-                            variant={"neoOutline"} 
+                            key={answer.id} 
+                            variant={variant} 
+                            size="xl" 
                             onClick={() => handleAnswer(answer)}
-                            size={"xl"}
                         >
-                            {answer.answerText}
+                            <p className="whitespace-normal">
+                                {answer.answerText}
+                            </p>
                         </Button>
-                    ))}
+                    )
+                })}
                 </div>
            </div>
         )}
@@ -114,7 +135,7 @@ export default function Home() {
             size={"lg"} 
             onClick={handleNext}
         >
-            Start
+            {!started ? 'Start' : (currentQuestion === questions.length - 1) ? 'Submit' : 'Next'}
         </Button>
       </footer>
     </div>
