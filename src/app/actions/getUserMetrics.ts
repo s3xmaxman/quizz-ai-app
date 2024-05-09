@@ -49,10 +49,10 @@ const getUserMetrics = async () => {
   
   
   return [
-    { label: "# of Quizzes", value: numQuizzes[0].value },
-    { label: "# of Questions", value: numQuestions[0].value },
-    { label: "# of Submissions", value: numSubmissions[0].value },
-    { label: "Average Score", value: avgScore[0].value },
+    { label: "クイズ数", value: numQuizzes[0].value },
+    { label: "問題の数", value: numQuestions[0].value },
+    { label: "完了回数", value: numSubmissions[0].value },
+    { label: "平均スコア", value: avgScore[0].value },
   ];
   
 }
