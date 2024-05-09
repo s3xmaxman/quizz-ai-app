@@ -40,6 +40,7 @@ export default function QuizzQuestions( props : Props) {
         return;
       }
   }
+  
 
   const handlePrevious = () => {
         if(currentQuestion !== 0) {
@@ -119,7 +120,7 @@ export default function QuizzQuestions( props : Props) {
                               size="xl" 
                               className="disabled:opacity-100"
                               onClick={() => handleAnswer(answer, questions[currentQuestion].id)}
-                          >
+                            >
                               <p className="whitespace-normal">
                                   {answer.answerText}
                               </p>
