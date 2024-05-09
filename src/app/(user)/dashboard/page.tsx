@@ -3,8 +3,9 @@ import { db } from "@/db";
 import { eq } from 'drizzle-orm';
 import { quizzes } from "@/db/schema";
 import { auth } from "@/auth";
-import QuizzesTable, { Quizz} from "./quizzesTable";
+
 import getUserMetrics from '@/app/actions/getUserMetrics';
+import QuizzesTable, { Quizz} from './QuizzesTable';
 
 
 type Props = {}
