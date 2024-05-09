@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
       modelName: "gpt-3.5-turbo",
     });
 
-    console.log("ChatGPT Model OK");
-
+  
     const parser = new JsonOutputFunctionsParser();
+
     const extractionFunctionSchema = {
       name: "extractor",
       description: "Extracts fields from the output",
@@ -75,7 +75,6 @@ export async function POST(req: NextRequest) {
       },
     };
 
-    console.log("Parser OK");
 
     const runnable = model
       .bind({
@@ -84,7 +83,7 @@ export async function POST(req: NextRequest) {
       })
       .pipe(parser);
 
-    console.log("Runnable OK");  
+ 
 
     const message = new HumanMessage({
       content: [
@@ -95,14 +94,11 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    console.log("Message OK");
 
     const result: any = await runnable.invoke([message]);
     console.log(result);
 
     const { quizzId } = await saveQuizz(result.quizz);
-
-    console.log("Quizz saved OK");
 
     return NextResponse.json({ quizzId }, { status: 200 });
   } catch (e: any) {
