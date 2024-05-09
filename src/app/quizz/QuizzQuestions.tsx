@@ -7,7 +7,7 @@ import ResultCard from "./ResultCard";
 import QuizzSubmission from "./QuizzSubmission";
 import { InferSelectModel } from "drizzle-orm";
 import { questionAnswers, questions as DbQuestions, quizzes } from "@/db/schema";
-// import { saveSubmission } from "@/actions/saveSubmissions";
+import { saveSubmission } from "@/actions/saveSubmissions";
 import { useRouter } from "next/navigation";
 
 type Answer = InferSelectModel<typeof questionAnswers>
@@ -67,7 +67,14 @@ export default function QuizzQuestions( props : Props) {
 
     }
 
-  const handleSubmit = async () => {}
+  const handleSubmit = async () => {
+     try {
+      const submissionId = await saveSubmission({ score }, props.quizz.id);
+     } catch (error) {
+      console.log(error);
+     }
+    setSubmitted(true);
+  }
     
   const handleExit = () => {
         router.push("/dashboard");
@@ -136,13 +143,22 @@ export default function QuizzQuestions( props : Props) {
               isCorrect={isCorrect} 
               correctAnswer={questions[currentQuestion].answers.find(answer => answer.isCorrect === true)?.answerText || ""}  
           />
-          <Button 
-              variant={"neo"} 
-              size={"lg"} 
+          {(currentQuestion === questions.length - 1) ? (
+            <Button 
+              variant="neo" 
+              size="lg" 
+              onClick={handleSubmit}
+            >
+              結果を見る
+            </Button>) : (
+            <Button 
+              variant="neo" 
+              size="lg" 
               onClick={handleNext}
-          >
-              {!started ? 'Start' : (currentQuestion === questions.length - 1) ? 'Submit' : 'Next'}
-          </Button>
+            >
+              {!started ? 'スタート' : '次へ'}
+            </Button>
+          )}
         </footer>
       </div>
     )
