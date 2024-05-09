@@ -51,6 +51,5 @@ export default async function saveQuizz(quizzData: SaveQuizzData) {
     }
   })
 
-  // クイズのIDを返す
   return { quizzId };
 }
