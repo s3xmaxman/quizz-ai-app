@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { quizzes } from "@/db/schema";
 import { auth } from "@/auth";
 import QuizzesTable, { Quizz} from "./quizzesTable";
+import getUserMetrics from '@/app/actions/getUserMetrics';
 
 
 type Props = {}
@@ -11,6 +12,9 @@ type Props = {}
 const dashboard = async (props: Props) => {
   const session = await auth();
   const userId = session?.user?.id;
+  const userData = await getUserMetrics();
+
+  console.log(userData)
   
   if(!userId) {
     return (
@@ -22,7 +26,7 @@ const dashboard = async (props: Props) => {
       where: eq(quizzes.userId, userId),
   })
 
-  console.log(userQuizzes)
+//   console.log(userQuizzes)
     
 
 
