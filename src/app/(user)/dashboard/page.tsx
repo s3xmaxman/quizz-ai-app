@@ -34,10 +34,6 @@ const dashboard = async (props: Props) => {
       where: eq(quizzes.userId, userId),
   })
 
-//   console.log(userQuizzes)
-    
-
-
  
   return (
         <>
@@ -55,7 +51,7 @@ const dashboard = async (props: Props) => {
             </div>
           </div>
           { heatMapData ? <SubmissionHeatMap data={heatMapData.data} /> : null }
-          <SubscribeBtn userId={userId} price={PRICE_ID} />
+          {/* <SubscribeBtn userId={userId} price={PRICE_ID} /> */}
           <QuizzesTable quizzes={userQuizzes} />
         </>
   )
