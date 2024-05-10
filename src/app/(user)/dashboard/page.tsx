@@ -9,6 +9,8 @@ import QuizzesTable, { Quizz} from './QuizzesTable';
 import MetricCard from './MetricCard';
 import getHeatMapData from '@/app/actions/getHeatMapData';
 import SubmissionHeatMap from './HeatMap';
+import SubscribeBtn from '../billing/SubscribeBtn';
+import { PRICE_ID } from '@/lib/utils';
 
 
 type Props = {}
@@ -52,7 +54,8 @@ const dashboard = async (props: Props) => {
             ) : null}
             </div>
           </div>
-          { heatMapData ? <SubmissionHeatMap data={heatMapData.data} /> : null}
+          { heatMapData ? <SubmissionHeatMap data={heatMapData.data} /> : null }
+          <SubscribeBtn userId={userId} price={PRICE_ID} />
           <QuizzesTable quizzes={userQuizzes} />
         </>
   )
