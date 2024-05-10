@@ -5,8 +5,10 @@ import { quizzes } from "@/db/schema";
 import { auth } from "@/auth";
 
 import getUserMetrics from '@/app/actions/getUserMetrics';
-import QuizzesTable, { Quizz} from './quizzesTable';
-import MetricCard from './metricCard';
+import QuizzesTable, { Quizz} from './QuizzesTable';
+import MetricCard from './MetricCard';
+import getHeatMapData from '@/app/actions/getHeatMapData';
+import Demo from './HeatMap';
 
 
 type Props = {}
@@ -15,8 +17,10 @@ const dashboard = async (props: Props) => {
   const session = await auth();
   const userId = session?.user?.id;
   const userData = await getUserMetrics();
+  const heatMapData = await getHeatMapData();
 
-  console.log(userData)
+
+
   
   if(!userId) {
     return (
@@ -48,6 +52,7 @@ const dashboard = async (props: Props) => {
             ) : null}
             </div>
           </div>
+          <Demo />
           <QuizzesTable quizzes={userQuizzes} />
         </>
 )
