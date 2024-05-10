@@ -1,6 +1,8 @@
+import { auth } from "@/auth";
 import { db } from "@/db";
 import { quizzes, questions as dbQuestions, questionAnswers } from "@/db/schema";
 import { InferInsertModel } from "drizzle-orm";
+
 
 type Quizz = InferInsertModel<typeof quizzes>;
 type Question = InferInsertModel<typeof dbQuestions>;
@@ -13,13 +15,16 @@ interface SaveQuizzData extends Quizz {
 export default async function saveQuizz(quizzData: SaveQuizzData) {
   // クイズデータをデータベースに保存する関数
   const { name, description, questions } = quizzData; // クイズデータから必要なプロパティを抽出
+  const session = await auth();
+  const userId = session?.user?.id;
 
   // クイズデータを挿入し、挿入されたクイズのIDを取得
   const newQuizz = await db
     .insert(quizzes)
     .values({
       name, // クイズの名前
-      description // クイズの説明
+      description, // クイズの説明
+      userId, // クイズを作成したユーザーのID
     })
     .returning({ insertedId: quizzes.id }); // 挿入されたクイズのIDを取得
   const quizzId = newQuizz[0].insertedId; // クイズのIDを取得
