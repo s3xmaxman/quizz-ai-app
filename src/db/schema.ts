@@ -76,16 +76,19 @@ export const quizzes = pgTable("quizzes", {
   userId: text("user_id").references(() => users.id), // 作成したユーザーのIDへの参照
 });
 
+
 export const quizzesRelations = relations(quizzes, ({ many, one }) => ({
   questions: many(questions), // クイズに関連する質問
   submissions: many(quizzSubmissions), // クイズの提出結果
 }));
+
 
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(), // 質問の一意のID
   questionText: text("question_text"), // 質問のテキスト
   quizzId: integer("quizz_id"), // 関連するクイズのID
 });
+
 
 export const questionsRelations = relations(questions, ({ one, many }) => ({
   quizz: one(quizzes, {
@@ -95,12 +98,14 @@ export const questionsRelations = relations(questions, ({ one, many }) => ({
   answers: many(questionAnswers), // 質問に関連する回答
 }));
 
+
 export const questionAnswers = pgTable("answers", {
   id: serial("id").primaryKey(), // 回答の一意のID
   questionId: integer("question_id"), // 関連する質問のID
   answerText: text("answer_text"), // 回答のテキスト
   isCorrect: boolean("is_correct"), // 正解かどうか
 });
+
 
 export const questionAnswersRelations = relations(questionAnswers, ({ one }) => ({
   question: one(questions, {
@@ -115,6 +120,7 @@ export const quizzSubmissions = pgTable("quizz_submissions", {
   score: integer("score"), // スコア
   createdAt: timestamp("created_at").defaultNow().notNull(), // 提出日時
 });
+
 
 export const quizzSubmissionsRelations = relations(quizzSubmissions, ({ one, many }) => ({
   quizz: one(quizzes, {
