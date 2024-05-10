@@ -9,6 +9,7 @@ import QuizzesTable, { Quizz} from './QuizzesTable';
 import MetricCard from './MetricCard';
 import getHeatMapData from '@/app/actions/getHeatMapData';
 import Demo from './HeatMap';
+import SubmissionHeatMap from './HeatMap';
 
 
 type Props = {}
@@ -52,7 +53,7 @@ const dashboard = async (props: Props) => {
             ) : null}
             </div>
           </div>
-          <Demo />
+          { heatMapData ? <SubmissionHeatMap data={heatMapData.data} /> : null}
           <QuizzesTable quizzes={userQuizzes} />
         </>
 )

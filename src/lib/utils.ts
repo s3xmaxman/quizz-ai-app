@@ -15,3 +15,14 @@ export function roundIfNumber(value: string | number | null) {
   }
   return value;
 }
+
+export function convertDateToString(date: Date): string {
+  const timestampDate = new Date(date);
+  const year = timestampDate.getFullYear();
+  const month = timestampDate.getMonth() + 1;
+  const day = timestampDate.getDate();
+  const formattedDate = `${year}/${month}/${day}`;
+  return formattedDate;
+}
+
+export const PRICE_ID: string = "price_1PEqZrBoC0oRCoQkRqlfCgNK"
